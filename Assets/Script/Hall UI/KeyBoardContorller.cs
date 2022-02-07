@@ -81,7 +81,7 @@ public class KeyBoardContorller : MonoBehaviour
     IEnumerator WaitForKey()
     {
         while (!keyEvent.isKey){
-            Debug.Log("I AM WAITING");
+            //Debug.Log("I AM WAITING");
             yield return null;
         }
     }
