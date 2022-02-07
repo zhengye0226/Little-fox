@@ -49,29 +49,51 @@ public class HallUiController : MonoBehaviour
     private string levelToload;
     [SerializeField] private GameObject noSaveGameDilog = null;
     private void Awake() {
-        resolutions = Screen.resolutions;
+
+        resolutions = GetResolution(Screen.resolutions);
         resolutionDropdown.ClearOptions();
+        
     }
+
+
+    /// <summary>
+    /// Remove repetition resolution
+    /// </summary>
+    /// <param name="values">resolutionp[]</param>
+    /// <returns></returns>
+    public static Resolution[] GetResolution(Resolution[] values)
+{
+
+            Dictionary<string, Resolution> options = new Dictionary<string, Resolution>();
+
+            List<Resolution> list = new List<Resolution>();
+
+            for(int i=0; i<values.Length; i++)
+            {
+                string option = values[i].width + "X" + values[i].height;
+
+                options[option] = values[i];
+            }
+
+            foreach(var item in options.Keys)
+            {
+                list.Add(options[item]);
+            }
+            return list.ToArray();
+
+}
 
     private void Start()
     {
-        List<string> options=new List<string>();
+        List<string> optionList = new List<string>();
 
-        int nowResolutionIndex=0;
+        int nowResolutionIndex = 0;
 
         for(int i = 0; i < resolutions.Length; i++)
         {
-            string option = null;
-            //when the resolution equal user's screen resolution
-            if(resolutions[i].width == Screen.width && resolutions[i].height == Screen.height)
-            {
-                option = resolutions[i].width + "X" + resolutions[i].height+"(Recommend)"; 
-                defalutResolutionValue = i;
-            }else
-            {
-                option = resolutions[i].width + "X" + resolutions[i].height;
-            }
-            options.Add(option);
+            string option = resolutions[i].width + "X" + resolutions[i].height;
+
+            optionList.Add(option);
         }
 
         if(PlayerPrefs.HasKey("masterResolution")){
@@ -80,8 +102,8 @@ public class HallUiController : MonoBehaviour
             nowResolutionIndex=defalutResolutionValue;
             PlayerPrefs.SetInt("masterResolution",nowResolutionIndex);
         }
-
-        resolutionDropdown.AddOptions(options);
+        
+        resolutionDropdown.AddOptions(optionList);
         resolutionDropdown.value=nowResolutionIndex;
         resolutionDropdown.RefreshShownValue();
 
