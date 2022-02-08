@@ -3,24 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class GameSave : SubsComponent
-{
-    // Start is called before the first frame update
-    public Dictionary<PLAYERINFOMATION, Object> playerSave = new Dictionary<PLAYERINFOMATION, Object>();
+[System.Serializable]
+public class GameSave{
+    public int currentHealth;
+    public int maxHealth;
+    public float playerPositionX;
+    public float playerPositionY;
 
-    public void OnSave()
-    {
-        print(Props._prop.PropsNumber[GAMEPROPS.STRAWBERRY]);
-
-    }
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Dictionary<int, float> enemyPositionX;
+    public Dictionary<int, float> enemyPositionY;
+    public Dictionary<int, bool> isDead;
 }

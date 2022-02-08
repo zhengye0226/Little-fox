@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.IO;
 
 public class HallUiController : MonoBehaviour
 {
@@ -120,6 +121,7 @@ public class HallUiController : MonoBehaviour
     /// </summary>
     public void NewGameDialogYes()
     {
+        PlayerPrefs.SetInt("isNewGame", 1);
         SceneManager.LoadScene(_newGameLevel);
     }
 
@@ -128,12 +130,12 @@ public class HallUiController : MonoBehaviour
     /// </summary>
     public void LoadGameDialogYes()
     {
-        if (PlayerPrefs.HasKey("SaveLevel"))
+        PlayerPrefs.SetInt("isNewGame", 0);
+        if (File.Exists(Application.dataPath + "DataXml.text"))
         {
-            levelToload = PlayerPrefs.GetString("Savelevel");
             //Save data about game 
             //PlayerPrefs.SetString("Savelevel",yourlevelis);
-            SceneManager.LoadScene(levelToload);
+            SceneManager.LoadScene(_newGameLevel);
         }
         else {
             noSaveGameDilog.SetActive(true);

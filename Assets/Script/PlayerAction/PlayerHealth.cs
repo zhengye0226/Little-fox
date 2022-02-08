@@ -5,12 +5,6 @@ using UnityEngine;
 public class PlayerHealth : SubsComponent
 {
     // Start is called before the first frame update
-
-    //ruby maxHealthy
-    private int maxHealth =5;
-    //ruby currentHealth
-    private int currentHealth = 5;
-    //invincibleTime
     public float MaxinvincibleTime=2.0f;
     //play music when ruby was hit
     private AudioSource PlayMusic;
@@ -18,11 +12,6 @@ public class PlayerHealth : SubsComponent
     //is invincible
     public bool isInvincible;
     private float invincibleTime;
-    public int CurrentHealth
-    {
-        set { currentHealth = value; }
-        get { return currentHealth; }
-    }
 
     private void OnEnable()
     {
@@ -39,15 +28,18 @@ public class PlayerHealth : SubsComponent
 
     public override void OnUpdate()
     {
-        //ËÀÍö¹éÁã
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         ReturnBack();
-        //ÎÞµÐµ¹¼ÆÊ±
+        //ï¿½ÞµÐµï¿½ï¿½ï¿½Ê±
         IsInvincible();
+
+        ChangeHealthBar();
+
     }
     /// <summary>
-    /// ²¥·Å¶ÔÓ¦ÒôÆµ
+    /// ï¿½ï¿½ï¿½Å¶ï¿½Ó¦ï¿½ï¿½Æµ
     /// </summary>
-    /// <param name="a">ÒôÆµ×ÊÔ´</param>
+    /// <param name="a">ï¿½ï¿½Æµï¿½ï¿½Ô´</param>
     public void PlaySound(AudioClip audioClip)
     {
         PlayMusic.PlayOneShot(audioClip);
@@ -58,10 +50,14 @@ public class PlayerHealth : SubsComponent
     /// <param name="HealthChange"></param>
     public void ChangeHealth(int HealthChange)
     {
-        CurrentHealth = CurrentHealth + HealthChange;
-        //ÑªÁ¿¸Ä±ä
-        UiHealthControl.instance.SetWidth(CurrentHealth/(float)maxHealth);
+        GameManger._instance.currentHealth += HealthChange;
+        ChangeHealthBar();
+    }
 
+    public void ChangeHealthBar()
+    {
+        //Ñªï¿½ï¿½ï¿½Ä±ï¿½
+        UiHealthControl.instance.SetWidth(GameManger._instance.currentHealth/(float)GameManger._instance.maxHealth);
     }
 
     /// <summary>
@@ -70,28 +66,26 @@ public class PlayerHealth : SubsComponent
     /// <param name="healthAmount"></param>
     private void ReturnBack() 
     {
-        //½ÇÉ«ÑªÁ¿¹éÁãºó·µ»Ø³õÊ¼Î»ÖÃ,ÑªÁ¿³äÂú
-        if (currentHealth == 0)
+        //ï¿½ï¿½É«Ñªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó·µ»Ø³ï¿½Ê¼Î»ï¿½ï¿½,Ñªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (GameManger._instance.currentHealth == 0)
         {
             control.transform.position = control.FirstPostion;
-            currentHealth = maxHealth;
-            //ÑªÌõ»ØÂú
-            UiHealthControl.instance.SetWidth(CurrentHealth / (float)maxHealth);
+            GameManger._instance.currentHealth = GameManger._instance.maxHealth;
         }
-        //±£Ö¤½ÇÉ«ÑªÁ¿ÔÚ[0,maxHealth]Ö®¼ä
+        //ï¿½ï¿½Ö¤ï¿½ï¿½É«Ñªï¿½ï¿½ï¿½ï¿½[0,maxHealth]Ö®ï¿½ï¿½
         //currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
     }
 
     /// <summary>
-    /// ÅÐ¶Ï½ÇÉ«ÊÇ·ñÊÜÉËº¦
+    /// ï¿½Ð¶Ï½ï¿½É«ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ëºï¿½
     /// </summary>
     public void IsInvincible()
     {
-        //Èç¹ûÕýÔÚÊÜµ½ÉËº¦£¬ÎÞµÐµ¹¼ÆÊ±Æô¶¯
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Üµï¿½ï¿½Ëºï¿½ï¿½ï¿½ï¿½ÞµÐµï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
         if (isInvincible)
         {
             invincibleTime -= Time.deltaTime; 
-            //µ¹¼ÆÊ±Ð¡ÓÚµÈÓÚ0±íÊ¾ÎÞµÐ×´Ì¬Ê±¼äµ½
+            //ï¿½ï¿½ï¿½ï¿½Ê±Ð¡ï¿½Úµï¿½ï¿½ï¿½0ï¿½ï¿½Ê¾ï¿½Þµï¿½×´Ì¬Ê±ï¿½äµ½
             if (invincibleTime <= 0) {
                 invincibleTime = MaxinvincibleTime;
                 isInvincible = false;
@@ -100,7 +94,7 @@ public class PlayerHealth : SubsComponent
     }
     public void PlayerHitAnimation()
     {
-        //²¥·ÅÎÞµÐ¶¯»­
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ÞµÐ¶ï¿½ï¿½ï¿½
         control.anim.SetTrigger("Hit");
     }
 
@@ -110,7 +104,7 @@ public class PlayerHealth : SubsComponent
     /// <returns></returns>
     public bool IsMaxHealth()
     {
-        if (currentHealth >= maxHealth)
+        if (GameManger._instance.currentHealth >= GameManger._instance.maxHealth)
             return true;
         return false;
     }

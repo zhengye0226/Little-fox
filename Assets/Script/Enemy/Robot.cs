@@ -186,7 +186,7 @@ public class Robot : Enemy
     public void IsRepair()
     {
         Vector2 position = this.gameObject.transform.position;
-        //���Ż�����Ч
+        //Play Effect
         Instantiate(HitEffectPrefab, position+Vector2.up*0.4f, Quaternion.identity);
         isRepair = true;
 
@@ -231,7 +231,7 @@ public class Robot : Enemy
         }
     }
     /// <summary>
-    /// �޸���Ч����
+    /// Fix Robot
     /// </summary>
     private void RobotFixSound()
     {

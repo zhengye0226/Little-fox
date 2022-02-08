@@ -12,22 +12,27 @@ public class Enemy : MonoBehaviour
 
     public Dictionary<ENEMY, int> EnmeyNumber = new Dictionary<ENEMY, int>();
     public Dictionary<ENEMY, List<Vector2>> EnmeyPosition = new Dictionary<ENEMY, List<Vector2>>();
-    //ÓÃÀ´¼ÇÂ¼ÔÚ³¡µÄ»úÆ÷ÈË²¢»½ÐÑ
+    //Save Robot
     public static Dictionary<int, GameObject> RobotList = new Dictionary<int, GameObject>();
-    public static int id=0;
+    public static int id;
     public static Enemy _control;
 
     // Start is called before the first frame update
     private void Awake()
     {
         _control = this;
-        //±éÀúÃ¶¾ÙµÄ·½Ê½
-        //´¢´æµÐÈËµÄÊýÁ¿ºÍÎ»ÖÃÐÅÏ¢
+        //ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ÙµÄ·ï¿½Ê½
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ï¢
         for (int i = 0; i < (int)ENEMY.NONE; i++)
         {
             List<Vector2> list = new List<Vector2>();
             EnmeyNumber.Add((ENEMY)i, 0);
             EnmeyPosition.Add((ENEMY)i, list);
+        }
+        if(PlayerPrefs.GetInt("isNewGame") == 1)
+        {
+            Enemy.id = 0;
+            RobotList.Clear();
         }
         //Debug.Log("Is Enemy Awake");
         //foreach (ENEMY item in ENEMY.GetValues(typeof(ENEMY)))
@@ -42,36 +47,36 @@ public class Enemy : MonoBehaviour
         //Debug.Log("Is Enemy Start");
     }
     /// <summary>
-    /// ¼ÇÂ¼µÐÈËÊýÁ¿
+    /// Return ENEMY values
     /// </summary>
-    /// <param name="game"></param>
+    /// <param name="game">Enemy type</param>
     public void AddNumber(ENEMY enmey)
     {
         _control.EnmeyNumber[enmey] += 1;
     }
     /// <summary>
-    /// ¼ÇÂ¼µÐÈËÎ»ÖÃ
+    /// Add Enemy number
     /// </summary>
-    /// <param name="game"></param>
-    /// <param name="position"></param>
+    /// <param name="game">Enemy type </param>
+    /// <param name="position">Enemy Position</param>
     public void AddPosition(ENEMY enmey, Vector2 position)
     {
         _control.EnmeyPosition[enmey].Add(position);
 
     }
     /// <summary>
-    /// É¾³ýµÐÈËÊýÁ¿
+    /// Remove Enemynumber
     /// </summary>
-    /// <param name="game"></param>
+    /// <param name="game">Enemy type</param>
     public void RemoveNumber(ENEMY enmey)
     {
         _control.EnmeyNumber[enmey] -= 1;
     }
     /// <summary>
-    /// É¾³ýµÐÈËÎ»ÖÃ
+    /// Remove EnemyPosition
     /// </summary>
-    /// <param name="game"></param>
-    /// <param name="position"></param>
+    /// <param name="game">Enemy type</param>
+    /// <param name="position">Enemy Position</param>
     public void RemovePosition(ENEMY enmey, Vector2 position)
     {
         _control.EnmeyPosition[enmey].Remove(position);
@@ -79,7 +84,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸ù¾Ý´«ÈëµÄµÐÈË»ñÈ¡¶ÔÓ¦µÄÀàÐÍ
+    /// ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½Äµï¿½ï¿½Ë»ï¿½È¡ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="enmeyType"></param>
     /// <returns></returns>
@@ -94,7 +99,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// µÀ¾ßÀà¼ÓÔØÖ®ºóÔËÐÐ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="obj"></param>
     public void OnStart(Object obj)
@@ -108,7 +113,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// µÀ¾ßÀàÏú»ÙºóÔËÐÐ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùºï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="obj"></param>
     public void SetOnDestroy(Object obj)

@@ -17,11 +17,12 @@ public class PlayerController : MonoBehaviour
 
     public Dictionary<SubsComponents, SubsComponent> SubComponetsDic = new Dictionary<SubsComponents, SubsComponent>();
     public Dictionary<GAMEPROPS, SubsComponent> GamePropDic = new Dictionary<GAMEPROPS, SubsComponent>();
-    public Dictionary<PLAYERINFOMATION, Object> PlayerInformation = new Dictionary<PLAYERINFOMATION, Object>();
-
+    public static PlayerController player;
     // Start is called before the first frame update
     public void Awake()
     {
+        player = this;
+        
         anim = this.gameObject.GetComponent<Animator>();
         fox_rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
 
@@ -29,35 +30,42 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        //Application.targetFrameRate 可以设置每秒刷新的帧率
+        //Application.targetFrameRate 锟斤拷锟斤拷锟斤拷锟斤拷每锟斤拷刷锟铰碉拷帧锟斤拷
 
         //movePosition=transform.position;
 
-        FirstPostion = this.transform.position;
+        FirstPostion = new Vector2(0, 0);
+
+        this.gameObject.transform.position = GameManger._instance.position;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        //从键盘获取输入进行横线移动
+        //movement left or right
         //float WalkX= Input.GetAxis("Horizontal");
-        //从键盘获取输入进行纵向移动
+        //movement up or down
         //float WalkZ = Input.GetAxis("Vertical");
-
-        //movemnt
-        SubComponetsDic[SubsComponents.MOVE_PLAYERMOVE].OnUpdate();
-        //Health change
-        SubComponetsDic[SubsComponents.HEALTH_CHANGE].OnUpdate();
-        //Attack
-        SubComponetsDic[SubsComponents.ATTACK].OnUpdate();
+        if(!GameManger._instance.isPaused){
+            //movemnt
+            SubComponetsDic[SubsComponents.MOVE_PLAYERMOVE].OnUpdate();
+            //Health change
+            SubComponetsDic[SubsComponents.HEALTH_CHANGE].OnUpdate();
+            //Attack
+            SubComponetsDic[SubsComponents.ATTACK].OnUpdate();
+        }
+        GameManger._instance.position = this.gameObject.transform.position;
 
     }
 
     private void FixedUpdate()
     {
-        //movemnt
-        SubComponetsDic[SubsComponents.MOVE_PLAYERMOVE].OnFixedUpdate();
+        if(!GameManger._instance.isPaused){
+            //movemnt
+            SubComponetsDic[SubsComponents.MOVE_PLAYERMOVE].OnFixedUpdate();
+        }
+
     }
 
 }
