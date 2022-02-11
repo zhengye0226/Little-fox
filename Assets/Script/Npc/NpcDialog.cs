@@ -35,16 +35,18 @@ public class NpcDialog : MonoBehaviour
     /// </summary>
     public void DisplayDialog()
     {
-        if (!Misson.instance.StartMisson && !Misson.instance.missionCompelte)
+        if (!GameManger._instance.missionStart[(int)MissionType.FROG_MISSION] && !GameManger._instance.missionCompelete[(int)MissionType.FROG_MISSION])
         {
-            dialogText.text = "噢，亲爱的ruby。\r\n我的名字是Jambi 。\r\n我的机器人都坏了，你能帮我修好他们吗?";
+            dialogText.text = "Hello Ruby.\r\n My name is Jambi and I have a problem with my robots. Can you help fix them?";
+            startMission.gameObject.SetActive(true);
         }
-        else if (Misson.instance.StartMisson && !Misson.instance.missionCompelte)
+        else if (GameManger._instance.missionStart[(int)MissionType.FROG_MISSION] && !GameManger._instance.missionCompelete[(int)MissionType.FROG_MISSION])
         {
-            dialogText.text = "请修复场内的五个机器人哦 目前进度" + Misson.instance.fixRobotNum + "/" + Misson.instance.fixRobotSum + "继续加油";
-        } else if (Misson.instance.StartMisson && Misson.instance.missionCompelte) {
+            dialogText.text = "The mission progress is " + GameManger._instance.missionProgress[(int)MissionType.FROG_MISSION] + "/" + GameManger._instance.missionCondition[(int)MissionType.FROG_MISSION] + " You need Fix more Robot";
+            startMission.gameObject.SetActive(false);
+        } else if (GameManger._instance.missionStart[(int)MissionType.FROG_MISSION] && GameManger._instance.missionCompelete[(int)MissionType.FROG_MISSION]) {
 
-            dialogText.text = "恭喜你，任务完成，前往下一个地图的钥匙给你";
+            dialogText.text = "Congratulation, Here is a key that you can use to open next map";
 
         }
         StartDialog = true;
@@ -62,15 +64,5 @@ public class NpcDialog : MonoBehaviour
             CloseTime = showTime;
             StartDialog = false;
         }
-    }
-
-    public void onClick()
-    {
-        Misson.instance.StartMisson = true;
-        Misson.instance.MissionStart();
-        StartDialog = true;
-        CloseTime = showTime;
-        startMission.GetComponentInChildren<Text>().text = "";
-        //destroy(startmission);
     }
 }

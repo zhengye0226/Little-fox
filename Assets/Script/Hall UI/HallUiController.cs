@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class HallUiController : MonoBehaviour
     [SerializeField] private Slider controllerSenSilder = null;
     [SerializeField] private int defalutSen = 4;
     public int mainControllerSen = 4;
-    
+
     [Header("InvertY Toggle Setting")]
     [SerializeField] private Toggle invertYToggle = null;
 
@@ -49,7 +50,9 @@ public class HallUiController : MonoBehaviour
     public string _newGameLevel;
     private string levelToload;
     [SerializeField] private GameObject noSaveGameDilog = null;
-    private void Awake() {
+    
+    private void Awake()
+    {
 
         resolutions = GetResolution(Screen.resolutions);
         resolutionDropdown.ClearOptions();
@@ -63,26 +66,20 @@ public class HallUiController : MonoBehaviour
     /// <param name="values">resolutionp[]</param>
     /// <returns></returns>
     public static Resolution[] GetResolution(Resolution[] values)
-{
+    {
 
-            Dictionary<string, Resolution> options = new Dictionary<string, Resolution>();
+        Dictionary<string, Resolution> options = new Dictionary<string, Resolution>();
 
-            List<Resolution> list = new List<Resolution>();
+        for (int i = 0; i < values.Length; i++)
+        {
+            string option = values[i].width + "X" + values[i].height;
 
-            for(int i=0; i<values.Length; i++)
-            {
-                string option = values[i].width + "X" + values[i].height;
+            options[option] = values[i];
+        }
 
-                options[option] = values[i];
-            }
+        return options.Values.ToArray();
 
-            foreach(var item in options.Keys)
-            {
-                list.Add(options[item]);
-            }
-            return list.ToArray();
-
-}
+    }
 
     private void Start()
     {
@@ -90,22 +87,25 @@ public class HallUiController : MonoBehaviour
 
         int nowResolutionIndex = 0;
 
-        for(int i = 0; i < resolutions.Length; i++)
+        for (int i = 0; i < resolutions.Length; i++)
         {
             string option = resolutions[i].width + "X" + resolutions[i].height;
 
             optionList.Add(option);
         }
 
-        if(PlayerPrefs.HasKey("masterResolution")){
-            nowResolutionIndex=PlayerPrefs.GetInt("masterResolution");
-        }else{
-            nowResolutionIndex=defalutResolutionValue;
-            PlayerPrefs.SetInt("masterResolution",nowResolutionIndex);
+        if (PlayerPrefs.HasKey("masterResolution"))
+        {
+            nowResolutionIndex = PlayerPrefs.GetInt("masterResolution");
         }
-        
+        else
+        {
+            nowResolutionIndex = defalutResolutionValue;
+            PlayerPrefs.SetInt("masterResolution", nowResolutionIndex);
+        }
+
         resolutionDropdown.AddOptions(optionList);
-        resolutionDropdown.value=nowResolutionIndex;
+        resolutionDropdown.value = nowResolutionIndex;
         resolutionDropdown.RefreshShownValue();
 
         _brightnessLevel = PlayerPrefs.GetFloat("masterBrightness");
@@ -121,30 +121,33 @@ public class HallUiController : MonoBehaviour
     /// </summary>
     public void NewGameDialogYes()
     {
-        PlayerPrefs.SetInt("isNewGame", 1);
         SceneManager.LoadScene(_newGameLevel);
     }
+    
 
     /// <summary>
     /// load game data you save before
     /// </summary>
     public void LoadGameDialogYes()
     {
-        PlayerPrefs.SetInt("isNewGame", 0);
         if (File.Exists(Application.dataPath + "DataXml.text"))
         {
             //Save data about game 
             //PlayerPrefs.SetString("Savelevel",yourlevelis);
+            PlayerPrefs.SetInt("LoadHallToBattle", 1);
             SceneManager.LoadScene(_newGameLevel);
         }
-        else {
+        else
+        {
             noSaveGameDilog.SetActive(true);
         }
     }
+
     /// <summary>
     /// Exit Game to desk
     /// </summary>
-    public void ExitButtom() {
+    public void ExitButtom()
+    {
 
         Application.Quit();
     }
@@ -183,56 +186,56 @@ public class HallUiController : MonoBehaviour
     /// </summary>
     public void GamePlayApply()
     {
-        if(invertYToggle.isOn)
+        if (invertYToggle.isOn)
         {
-            PlayerPrefs.SetInt("masterInvertY",1);
+            PlayerPrefs.SetInt("masterInvertY", 1);
         }
         else
         {
-            PlayerPrefs.SetInt("masterInvertY",0);
+            PlayerPrefs.SetInt("masterInvertY", 0);
         }
 
-        PlayerPrefs.SetInt("masterSensitivity",mainControllerSen);
+        PlayerPrefs.SetInt("masterSensitivity", mainControllerSen);
         sucessMessage.text = "GamePlay Sucess";
         StartCoroutine(ConfirmationBox());
     }
 
     public void SetBrightness(float brightness)
     {
-        _brightnessLevel=brightness;
-        brightnessTextValue.text=brightness.ToString("0.0");
+        _brightnessLevel = brightness;
+        brightnessTextValue.text = brightness.ToString("0.0");
     }
 
     public void SetFullScreen(bool fullScreen)
     {
-        _isFullScreen=fullScreen;
+        _isFullScreen = fullScreen;
     }
 
     public void SetQuality(int qualityValue)
     {
-        _qualityLevel=qualityValue;
+        _qualityLevel = qualityValue;
     }
 
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width,resolution.height,Screen.fullScreen);
-        PlayerPrefs.SetInt("masterResolution",resolutionDropdown.value);
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        PlayerPrefs.SetInt("masterResolution", resolutionDropdown.value);
     }
-    
+
     public void GraphicsApply()
     {
         //Change your brightness with your post processing or whatever it is
-        PlayerPrefs.SetFloat("masterBrightness",_brightnessLevel);
+        PlayerPrefs.SetFloat("masterBrightness", _brightnessLevel);
 
         //Make game interface full screen
-        PlayerPrefs.SetInt("masterFullScreen",(_isFullScreen? 1 : 0));
-        Screen.fullScreen=_isFullScreen;
-        
-        PlayerPrefs.SetInt("masterQuality",_qualityLevel);
+        PlayerPrefs.SetInt("masterFullScreen", (_isFullScreen ? 1 : 0));
+        Screen.fullScreen = _isFullScreen;
+
+        PlayerPrefs.SetInt("masterQuality", _qualityLevel);
         QualitySettings.SetQualityLevel(_qualityLevel);
-        
-        PlayerPrefs.SetInt("masterResolution",resolutionDropdown.value);
+
+        PlayerPrefs.SetInt("masterResolution", resolutionDropdown.value);
 
 
         sucessMessage.text = "Graphics Sucess";
@@ -244,14 +247,14 @@ public class HallUiController : MonoBehaviour
     /// <param name="volume"></param>
     public void ResetButton(string MenuType)
     {
-        if(MenuType == "Audio")
+        if (MenuType == "Audio")
         {
             AudioListener.volume = defalutVolume;
             volumeSlider.value = defalutVolume;
             volumeTextValue.text = volumeSlider.value.ToString("0.0");
             VolumeApply();
         }
-        if(MenuType == "GamePlay")
+        if (MenuType == "GamePlay")
         {
             controllerSenSilder.value = defalutSen;
             controllerSenTextValue.text = defalutSen.ToString("0");
@@ -259,22 +262,22 @@ public class HallUiController : MonoBehaviour
             invertYToggle.isOn = false;
             GamePlayApply();
         }
-        if(MenuType == "Graphics")
+        if (MenuType == "Graphics")
         {
-            brightnessSlider.value=defalutBrightness;
+            brightnessSlider.value = defalutBrightness;
             brightnessTextValue.text = defalutBrightness.ToString("0.0");
-            
+
             //Default Level is low
-            qualityDropdown.value=1;
+            qualityDropdown.value = 1;
             QualitySettings.SetQualityLevel(1);
 
             //Defalut fullScreen is false
-            fullScreenToggle.isOn=false;
-            Screen.fullScreen=false;
-            
-            Resolution currentResolution=Screen.currentResolution;
-            Screen.SetResolution(currentResolution.width,currentResolution.height,Screen.fullScreen);
-            resolutionDropdown.value=resolutions.Length;
+            fullScreenToggle.isOn = false;
+            Screen.fullScreen = false;
+
+            Resolution currentResolution = Screen.currentResolution;
+            Screen.SetResolution(currentResolution.width, currentResolution.height, Screen.fullScreen);
+            resolutionDropdown.value = resolutions.Length;
 
             GraphicsApply();
         }
@@ -290,4 +293,5 @@ public class HallUiController : MonoBehaviour
         yield return new WaitForSeconds(2);
         confirmationPrompt.SetActive(false);
     }
+
 }

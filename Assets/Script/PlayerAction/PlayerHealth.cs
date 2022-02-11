@@ -28,9 +28,9 @@ public class PlayerHealth : SubsComponent
 
     public override void OnUpdate()
     {
-        //��������
+        //Dead
         ReturnBack();
-        //�޵е���ʱ
+        //Invincible time
         IsInvincible();
 
         ChangeHealthBar();
@@ -72,20 +72,20 @@ public class PlayerHealth : SubsComponent
             control.transform.position = control.FirstPostion;
             GameManger._instance.currentHealth = GameManger._instance.maxHealth;
         }
-        //��֤��ɫѪ����[0,maxHealth]֮��
+        //make sure currentHealth between 0 to maxHealth
         //currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
     }
 
     /// <summary>
-    /// �жϽ�ɫ�Ƿ����˺�
+    /// IsInvincible
     /// </summary>
     public void IsInvincible()
     {
-        //��������ܵ��˺����޵е���ʱ����
+        //InvincibleTime Start
         if (isInvincible)
         {
             invincibleTime -= Time.deltaTime; 
-            //����ʱС�ڵ���0��ʾ�޵�״̬ʱ�䵽
+            //InvincibleTime back to default
             if (invincibleTime <= 0) {
                 invincibleTime = MaxinvincibleTime;
                 isInvincible = false;
@@ -94,7 +94,7 @@ public class PlayerHealth : SubsComponent
     }
     public void PlayerHitAnimation()
     {
-        //�����޵ж���
+        //Play Animation when Player was hitted
         control.anim.SetTrigger("Hit");
     }
 

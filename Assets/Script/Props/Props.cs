@@ -13,11 +13,13 @@ public  class Props : MonoBehaviour
 {
     public Dictionary<GAMEPROPS, List<Vector2>> PropsPosition = new Dictionary<GAMEPROPS, List<Vector2>>();
     public Dictionary<GAMEPROPS, int> PropsNumber= new Dictionary<GAMEPROPS, int>();
+    public List<GameObject> propslist = new List<GameObject>();
     public static Props _prop;
+    public GameObject[] gameObjects = new GameObject[(int)(GAMEPROPS.NONE)];
     private void Awake()
     {
         _prop = this;
-        //Ñ­»·³õÊ¼»¯µÀ¾ß
+        //Ñ­ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         foreach (GAMEPROPS item in GAMEPROPS.GetValues(typeof(GAMEPROPS)))
         {     
             List<Vector2> listName = new List<Vector2>();
@@ -32,7 +34,7 @@ public  class Props : MonoBehaviour
         //Debug.Log("Is Props start");
     }
     /// <summary>
-    /// ¼ÇÂ¼µÀ¾ßÊýÁ¿
+    /// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="game"></param>
     public void AddNumber(GAMEPROPS game)
@@ -40,7 +42,7 @@ public  class Props : MonoBehaviour
          _prop.PropsNumber[game] += 1;
     }
     /// <summary>
-    /// ¼ÇÂ¼µÀ¾ßÎ»ÖÃ
+    /// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
     /// </summary>
     /// <param name="game"></param>
     /// <param name="position"></param>
@@ -50,7 +52,7 @@ public  class Props : MonoBehaviour
 
     }
     /// <summary>
-    /// É¾³ýµÀ¾ßÊýÁ¿
+    /// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="game"></param>
     public void RemoveNumber(GAMEPROPS game)
@@ -58,7 +60,7 @@ public  class Props : MonoBehaviour
         _prop.PropsNumber[game] -= 1;
     }
     /// <summary>
-    /// É¾³ýµÀ¾ßÎ»ÖÃ
+    /// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
     /// </summary>
     /// <param name="game"></param>
     /// <param name="position"></param>
@@ -67,8 +69,16 @@ public  class Props : MonoBehaviour
         _prop.PropsPosition[game].Remove(position);
 
     }
+    public void AddPropsGameObject(GameObject gameObject)
+    {
+        _prop.propslist.Add(gameObject);
+    }
+    public void RemovePropsGameObject(GameObject gameObject)
+    {
+        _prop.propslist.Remove(gameObject);
+    }
     /// <summary>
-    /// ¸ù¾Ý´«ÈëµÄµÀ¾ßÀà»ñÈ¡¶ÔÓ¦µÄÃ¶¾ÙÖµ
+    /// ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ó¦ï¿½ï¿½Ã¶ï¿½ï¿½Öµ
     /// </summary>
     /// <param name="gameProp"></param>
     /// <returns></returns>
@@ -84,7 +94,7 @@ public  class Props : MonoBehaviour
     }
 
     /// <summary>
-    /// µÀ¾ßÀà¼ÓÔØÖ®ºóÔËÐÐ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="obj"></param>
     public void OnStart(Object obj)
@@ -95,17 +105,19 @@ public  class Props : MonoBehaviour
         //Debug.Log(Position);
         _prop.AddNumber(_prop.GetGameProps(obj));
         _prop.AddPosition(_prop.GetGameProps(obj), Position);
+        _prop.AddPropsGameObject(ob.gameObject);
     }
 
     /// <summary>
-    /// µÀ¾ßÀàÏú»ÙºóÔËÐÐ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùºï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="obj"></param>
     public void SetOnDestroy(Object obj)
     {
         Component ob = (Component)obj;
         Vector2 Position = ob.gameObject.transform.position;
-        _prop.RemoveNumber(_prop.GetGameProps(this));
-        _prop.RemovePosition(_prop.GetGameProps(this), Position);
+        _prop.RemoveNumber(_prop.GetGameProps(obj));
+        _prop.RemovePosition(_prop.GetGameProps(obj), Position);
+        _prop.RemovePropsGameObject(ob.gameObject);
     }
 }

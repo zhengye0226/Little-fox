@@ -1,14 +1,13 @@
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Robot : Enemy
+public class Robot : MonoBehaviour
 {
     //rebot move speed
     public float speed;
-
     private Rigidbody2D robotRigid;
-
     private Vector2 movePosition;
     //control robot move one direction time
     public float timer = 3.0f;
@@ -18,18 +17,12 @@ public class Robot : Enemy
     int xMove;
     // Start is called before the first frame update
     Animator anim;
-
-    private bool isRepair;
-
+    public bool isRepair;
     //drop prop when robot repair
     public GameObject props;
-
     public GameObject props1;
-
     private ParticleSystem SmokeEffect;
-
     public AudioSource audioSource;
-
     public AudioSource walkAudioSource;
     //���Ż������޸���Ч
     public AudioClip RobotFix;
@@ -37,21 +30,9 @@ public class Robot : Enemy
     public AudioClip[] RobotHit;
     //���Ž�ɫ������Ч
     public AudioClip audioClip;
-
     public GameObject HitEffectPrefab;
-
     private void OnEnable()
     {
-        //�����ɵĻ����˶������ӵ��ֵ��У���Ӧid
-        //���id�������������򲻼�������
-        if (Enemy.id < 5)
-        {
-            Enemy.RobotList.Add(Enemy.id, this.gameObject);
-
-            Enemy.id += 1;
-
-            this.gameObject.SetActive(false);
-        }
 
         xMove = Random.Range(0, 2);
 
@@ -67,36 +48,47 @@ public class Robot : Enemy
     }
     private void Start()
     {
+        
+        Enemy._control.OnStart(this);
 
-        OnStart(this);
-
+    }
+    private void OnDestroy() {
+        Enemy._control.SetOnDestroy(this);
     }
     private void Update()
     {
+
+        robotRigid.simulated = !Enemy._control.EnemyIsDeadYorN(this);
+
         EnemyMovement();
+
         PlayMoveAnimation();
-        if (movePosition != Vector2.zero && !isRepair&& Misson.instance.StartMisson)
+
+        if (movePosition != Vector2.zero && !Enemy._control.EnemyIsDeadYorN(this) && GameManger._instance.missionStart[(int)MissionType.FROG_MISSION])
         {
 
             if (!walkAudioSource.isPlaying)
             {
                 walkAudioSource.Play();
+                SmokeEffect.Play();
             }
         }
         else
         {
+            SmokeEffect.Stop();
             walkAudioSource.Stop();
         }
+
+        Vector2 position = this.transform.position;
+
+        Enemy._control.SaveInUpdate(this.gameObject, this, position);
     }
 
     private void FixedUpdate()
     {
         EnemyGetMove();
     }
-    private void OnDestroy()
-    {
-        SetOnDestroy(this);
-    }
+
     /// <summary>
     /// robot move
     /// </summary>
@@ -142,7 +134,7 @@ public class Robot : Enemy
     }
     private void PlayMoveAnimation()
     {
-        anim.SetBool("isRepair", isRepair);
+        anim.SetBool("isRepair", Enemy._control.EnemyIsDeadYorN(this));
 
         anim.SetFloat("MoveX", movePosition.x);
 
@@ -169,7 +161,8 @@ public class Robot : Enemy
     {
         PlayerHealth player = collision.gameObject.GetComponentInChildren<PlayerHealth>();
 
-        if (player != null && !player.isInvincible) {
+        if (player != null && !player.isInvincible)
+        {
 
             player.ChangeHealth(-1);
             player.PlaySound(audioClip);
@@ -187,37 +180,35 @@ public class Robot : Enemy
     {
         Vector2 position = this.gameObject.transform.position;
         //Play Effect
-        Instantiate(HitEffectPrefab, position+Vector2.up*0.4f, Quaternion.identity);
-        isRepair = true;
+        Instantiate(HitEffectPrefab, position + Vector2.up * 0.4f, Quaternion.identity);
 
-        //�޸�֮������˵ĸ������ߣ����ٽ�������Ч��
-        robotRigid.simulated = false;
+        isRepair = true;
+        Enemy._control.SaveEnemy(this.gameObject, this, position, isRepair);
+
         //�����޸�����
         anim.SetBool("isRepair", isRepair);
-        //ֹͣ����������Ч
-        SmokeEffect.Stop();
+
         //���ɵ���
         GetProps();
 
         walkAudioSource.Stop();
         //������ű�������Ч
-        int randomNum = Random.Range(0,2);
+        int randomNum = Random.Range(0, 2);
         audioSource.PlayOneShot(RobotHit[randomNum]);
         //��ʱ�����޸���Ч
         Invoke("RobotFixSound", 0.9f);
 
         //�޸��Ļ���������1
-        Misson.instance.fixRobotNum += 1;
+        GameManger._instance.missionProgress[(int)MissionType.FROG_MISSION] += 1; 
     }
-
     /// <summary>
     /// After Robot repair 
     /// </summary>
     private void GetProps()
     {
-        int x = Random.Range(0,20);
+        int x = Random.Range(0, 20);
         //���x<8���׳���ݮ�����16>x>=8���׳��ӵ��������x>=16��ʲôҲ����
-        x = (x < 8) ? 0 : ((x<16)?1:2);
+        x = (x < 8) ? 0 : ((x < 16) ? 1 : 2);
         switch (x)
         {
             case 0:

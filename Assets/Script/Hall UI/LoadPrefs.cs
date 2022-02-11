@@ -84,6 +84,11 @@ public class LoadPrefs : MonoBehaviour
         {
             PlayerPrefs.SetInt("AttackKey", (int)KeyCode.H);
         }
+        
+        if(!PlayerPrefs.HasKey("LoadHallToBattle"))
+        {
+            PlayerPrefs.SetInt("LoadHallToBattle", 0);
+        }
     }
 
     private void Awake()

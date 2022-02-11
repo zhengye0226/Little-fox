@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtleBag : Props
+public class ButtleBag : MonoBehaviour
 {
-    //²¥·ÅÊ°È¡ÌØÐ§
+    //ï¿½ï¿½ï¿½ï¿½Ê°È¡ï¿½ï¿½Ð§
     public GameObject PropsCatchPrefab;
     public CogBullet cogBullet;
     public AudioClip audioClip;
@@ -12,14 +12,13 @@ public class ButtleBag : Props
     private void Start()
     {
 
-        OnStart(this);
+        Props._prop.OnStart(this);
         //Debug.Log(_prop.GetGameProps(this)+""+this.GetType());
-
     }
 
     private void OnDestroy()
     {
-        SetOnDestroy(this);
+        Props._prop.SetOnDestroy(this);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

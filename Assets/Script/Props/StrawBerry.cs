@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-class StrawBerry: Props
+class StrawBerry: MonoBehaviour
 {
     //播放拾取特效
     public GameObject PropsCatchPrefab;
@@ -11,12 +11,12 @@ class StrawBerry: Props
     private void Start()
     {
 
-        OnStart(this);
+        Props._prop.OnStart(this);
     }
 
     private void OnDestroy()
     {
-        SetOnDestroy(this);
+        Props._prop.SetOnDestroy(this);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

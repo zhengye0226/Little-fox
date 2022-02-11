@@ -24,13 +24,14 @@ public class PlayerController : MonoBehaviour
         player = this;
         
         anim = this.gameObject.GetComponent<Animator>();
+        
         fox_rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
 
     }
 
     private void Start()
     {
-        //Application.targetFrameRate ��������ÿ��ˢ�µ�֡��
+        //Application.targetFrameRate set Fps
 
         //movePosition=transform.position;
 
