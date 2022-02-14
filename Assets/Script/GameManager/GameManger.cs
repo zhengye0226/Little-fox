@@ -17,9 +17,8 @@ public class GameManger : MonoBehaviour
     public Dictionary<int, bool> missionCompelete = new Dictionary<int, bool>();
     public Dictionary<int, int> missionCondition = new Dictionary<int, int>();
     public Dictionary<int, int> missionProgress = new Dictionary<int, int>();
-    public Dictionary<ENEMY, int> newEnmeyNumber = new Dictionary<ENEMY, int>();
-    public Dictionary<ENEMY, Dictionary<int, Vector2>> newEnmeyPosition = new Dictionary<ENEMY, Dictionary<int, Vector2>>();
-    public Dictionary<int, bool> newEnemyIsDead = new Dictionary<int, bool>();
+    public Dictionary<int[], int[]> createEnemyAre = new Dictionary<int[], int[]>();
+    public List<Vector2> enemyCreatePosition = new List<Vector2>();
     private void Awake() {
 
         _instance = this;

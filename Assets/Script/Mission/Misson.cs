@@ -100,47 +100,48 @@ public class Misson : MonoBehaviour
 
     private void AddRobot()
     {
-        fixEnemySum = 6;
+        GameManger._instance.missionCondition[(int)MissionType.FROG_MISSION] = 6;
 
-        GameManger._instance.missionCondition[(int)MissionType.FROG_MISSION] = fixEnemySum;
-
-        float[] enmeyPositionX = RandomPosition(6, -27, 12); 
-        float[] enmeyPositionY = RandomPosition(6, -8, 6); 
+        // float[] enmeyPositionX = RandomPosition(6, -27, 12); 
+        // float[] enmeyPositionY = RandomPosition(6, -8, 6); 
         
-        for(int i=0; i<6; i++)
-        {   
-            Instantiate(Enemy._control.gameObjects[0], new Vector2(enmeyPositionX[i], enmeyPositionY[i]), Quaternion.identity);
-        }
+        // for(int i=0; i<6; i++)
+        // {   
+        //     Instantiate(Enemy._control.gameObjects[0], new Vector2(enmeyPositionX[i], enmeyPositionY[i]), Quaternion.identity);
+        // }
+
+        EnemyPosition enemyPosition = new EnemyPosition();
+        enemyPosition.AddEnemy(0, 6);
         
     }
 
-    private float[] RandomPosition(int length, int minNumber, int maxNumber)
-    {
-        float[] array = new float[length];
+    // private float[] RandomPosition(int length, int minNumber, int maxNumber)
+    // {
+    //     float[] array = new float[length];
 
-        for(int i=0; i<length; i++)
-        {
-            int number = Random.Range(minNumber, maxNumber);
-            while(RemoveRepetition(array, number))
-            {
-                number = Random.Range(minNumber, maxNumber);
-            }
-            array[i] = number;
-        }
+    //     for(int i=0; i<length; i++)
+    //     {
+    //         int number = Random.Range(minNumber, maxNumber);
+    //         while(RemoveRepetition(array, number))
+    //         {
+    //             number = Random.Range(minNumber, maxNumber);
+    //         }
+    //         array[i] = number;
+    //     }
 
-        return array;
-    }
+    //     return array;
+    // }
 
-    private bool RemoveRepetition(float[] array, int number)
-    {
-        for(int i=0; i<array.Length; i++)
-        {
-            if(number == array[i])
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    // private bool RemoveRepetition(float[] array, int number)
+    // {
+    //     for(int i=0; i<array.Length; i++)
+    //     {
+    //         if(number == array[i])
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
 }

@@ -51,6 +51,7 @@ public class HallUiController : MonoBehaviour
     private string levelToload;
     [SerializeField] private GameObject noSaveGameDilog = null;
     
+    private int test_number;
     private void Awake()
     {
 

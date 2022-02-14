@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
             //movemnt
             SubComponetsDic[SubsComponents.MOVE_PLAYERMOVE].OnFixedUpdate();
         }
+        //Debug.Log(Time.realtimeSinceStartup);
 
     }
 

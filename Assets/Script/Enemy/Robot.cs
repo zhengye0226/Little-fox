@@ -31,6 +31,7 @@ public class Robot : MonoBehaviour
     //���Ž�ɫ������Ч
     public AudioClip audioClip;
     public GameObject HitEffectPrefab;
+
     private void OnEnable()
     {
 
